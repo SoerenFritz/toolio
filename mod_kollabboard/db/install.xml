@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local-plugins/whiteboard/db" VERSION="20260710" COMMENT="XMLDB file for Moodle local-plugins/whiteboard"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://moodle.org/xmldb/xmldb.xsd"
+>
+<XMLDB PATH="mod/kollabboard/db" VERSION="2026072902" COMMENT="XMLDB file for Moodle mod/kollabboard">
+  <TABLES>
+    <TABLE NAME="whiteboard" COMMENT="Stores whiteboard instances">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="Course ID"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Whiteboard name"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false" COMMENT="Description"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" COMMENT="Intro format"/>
+        <FIELD NAME="room_id" TYPE="char" LENGTH="100" NOTNULL="true" COMMENT="Unique room ID for kits.app"/>
+        <FIELD NAME="encryption_key" TYPE="char" LENGTH="22" NOTNULL="true" COMMENT="22-char encryption key"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Last modified timestamp"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Created timestamp"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="room_id_idx" UNIQUE="true" FIELDS="room_id"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="kollabboard_boards" COMMENT="Persisted Excalidraw scene per room (end-to-end encrypted blob)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="roomid" TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="Unguessable room id (HMAC-derived)"/>
+        <FIELD NAME="kollabboardid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="FK to kollabboard.id"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Group id (0 = shared board)"/>
+        <FIELD NAME="sceneversion" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Excalidraw scene version"/>
+        <FIELD NAME="sceneblob" TYPE="text" NOTNULL="false" COMMENT="Base64 of encrypted scene blob"/>
+        <FIELD NAME="savedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User id of last save (0 if unknown)"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="roomid" UNIQUE="true" FIELDS="roomid"/>
+        <INDEX NAME="kollabboardid" UNIQUE="false" FIELDS="kollabboardid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="kollabboard_files" COMMENT="Persisted Excalidraw image files per room (encrypted blob)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="roomid" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="fileid" TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="filedata" TYPE="text" NOTNULL="false" COMMENT="Base64 of encrypted file blob"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="roomfile" UNIQUE="true" FIELDS="roomid, fileid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

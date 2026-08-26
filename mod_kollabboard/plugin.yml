@@ -1,0 +1,6 @@
+component: mod_kollabboard
+type: mod
+name: KollabBoard
+description: Kollaboratives Board für Moodle-Kurse.
+
+requires: []
