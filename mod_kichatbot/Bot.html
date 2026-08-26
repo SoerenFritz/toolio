@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodle AI Chatbot Prototyp (Figma Style)</title>
+    <script src="script.js"></script>
+    <style>
+        :root {
+            --primary: #f27b13; --primary-light: #fef4ec; --bg: #f8fafc; --sidebar-bg: #ffffff;
+            --card-bg: #ffffff; --border: #e2e8f0; --text-main: #0f172a; --text-muted: #64748b;
+            --teacher: #10b981; --radius: 16px; --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 12px 24px -4px rgba(15, 23, 42, 0.04); --transition: all 0.25s ease;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 280px; background-color: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 32px 24px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box; }
+        .sidebar h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 0 0 14px 0; font-weight: 700; }
+        .btn { padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-weight: 500; font-size: 0.95rem; transition: var(--transition); text-align: left; background: white; color: var(--text-main); width: 100%; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-sm); }
+        .btn:hover { background: var(--bg); transform: translateY(-1px); }
+        .btn-role.active { background-color: #f1f5f9; color: var(--text-main); border-color: var(--text-main); font-weight: 600; }
+        .btn-role.teacher-active { background-color: #ecfdf5; color: var(--teacher); border-color: var(--teacher); font-weight: 600; }
+        .chat-modes { display: flex; flex-direction: column; gap: 4px; }
+        .mode-btn.active { background: var(--primary-light); font-weight: 600; border-color: var(--primary); color: var(--primary); }
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: #ffffff; position: relative; }
+        .chat-header { padding: 24px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #ffffff; }
+        .chat-header h3 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+        .chat-messages { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; background-color: #fafafa; }
+        .message { max-width: 70%; padding: 16px 20px; border-radius: var(--radius); line-height: 1.6; font-size: 0.98rem; box-shadow: var(--shadow-sm); }
+        .message.user { background-color: var(--text-main); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .message.bot { background-color: #ffffff; color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+        .suggested-prompts { display: flex; gap: 10px; padding: 16px 40px; overflow-x: auto; background: #ffffff; border-top: 1px solid var(--border); }
+        .prompt-chip { background: white; border: 1px solid var(--border); padding: 10px 18px; border-radius: 30px; font-size: 0.88rem; cursor: pointer; white-space: nowrap; transition: var(--transition); color: var(--text-muted); font-weight: 500; }
+        .chat-input-area { padding: 24px 40px 32px 40px; border-top: 1px solid var(--border); display: flex; gap: 16px; background: #ffffff; }
+        .chat-input-area input { flex: 1; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 1rem; outline: none; transition: var(--transition); background: var(--bg); }
+        .teacher-tools { width: 340px; border-left: 1px solid var(--border); background: var(--bg); padding: 32px 24px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; box-sizing: border-box; }
+        .teacher-tools h3 { margin: 0 0 4px 0; font-size: 1.1rem; font-weight: 700; }
+        .tool-card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+        .tool-card h4 { margin: 0 0 10px 0; font-size: 0.95rem; font-weight: 600; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <div>
+            <h2>Rollen-Wechsel</h2>
+            <div class="chat-modes">
+                <button class="btn btn-role active" id="btn-student" onclick="switchRole('student')">Schüler-Ansicht</button>
+                <button class="btn btn-role" id="btn-teacher" onclick="switchRole('teacher')">Lehrer-Ansicht</button>
+            </div>
+        </div>
+        <div>
+            <h2>Chat-Modus</h2>
+            <div class="chat-modes">
+                <button class="btn mode-btn active" id="btn-single" onclick="switchMode('single')">Einzelchat (KI)</button>
+                <button class="btn mode-btn" id="btn-group" onclick="switchMode('group')">Gruppenchat (Simulation)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="main-chat">
+        <div class="chat-header">
+            <h3 id="chat-title">KI-Informationsphase (Einzelchat)</h3>
+            <span id="role-badge" style="background:var(--bg); border: 1px solid var(--border); padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">Schüler</span>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">Hallo! Ich bin dein KI-Lernassistent. Sobald deine Lehrkraft mich über das Dashboard mit einer Datei gefüttert hat, helfe ich dir beim Lernen!</div>
+        </div>
+        <div class="suggested-prompts">
+            <div class="prompt-chip" onclick="usePrompt('Erkläre mir das Thema noch einmal vereinfacht.')">Thema vereinfachen</div>
+            <div class="prompt-chip" onclick="usePrompt('Stimmt das wirklich, was du gerade behauptet hast?')">Faktencheck anfordern</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Nachricht eingeben..." onkeypress="handleKeyPress(event)">
+            <button class="btn" onclick="sendMessage()" style="background:var(--text-main); color:white; width:auto; margin:0; font-weight:600; padding:16px 24px;">Senden</button>
+        </div>
+    </div>
+
+    <!-- RIGHT TEACHER SIDEBAR -->
+    <div class="teacher-tools hidden" id="teacher-sidebar">
+        <h3>Lehrer-Dashboard</h3>
+
+        <!-- NEU: Rollen-Auswahl für Lehrkräfte -->
+        <div class="tool-card" style="border-top: 4px solid var(--primary);">
+            <h4>Bot-Rolle festlegen</h4>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin:0 0 10px 0;">Bestimme, wie die KI mit den Schülern interagieren soll.</p>
+            <select id="bot-role-select" onchange="changeBotRole(this.value)" style="width:100%; padding:10px; border-radius:var(--radius); border:1px solid var(--border); font-family:inherit; font-size:0.9rem; background:white;">
+                <option value="standard">Standard (Reiner Fakten-Bot)</option>
+                <option value="kritisch">Kritischer Tutor (streut absichtlich Fehler ein)</option>
+                <option value="freundlich">Freundlicher Erklärer (einfache Sprache)</option>
+            </select>
+        </div>
+
+        <div class="tool-card" style="border-top: 4px solid var(--teacher);">
+            <h4>1. KI mit Datei füttern</h4>
+            <form id="uploadForm" onsubmit="uploadTeacherFile(event)">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin:0 0 8px 0; font-weight:600;">Dokument hochladen (.pdf / .txt)</p>
+                <input type="file" id="teacher-file" name="file" accept=".pdf,.txt" style="font-size:0.85rem; width:100%; margin-bottom:12px;" required>
+                <button type="submit" id="upload-submit-btn" class="btn" style="background:var(--teacher); color:white; border:none; font-weight:600; text-align:center; justify-content:center; margin:0;">
+                    Datei an KI senden
+                </button>
+            </form>
+        </div>
+
+        <div class="tool-card">
+            <h4>Ergebnissicherung</h4>
+            <button class="btn" onclick="triggerTool('ergebnissicherung')">Protokoll generieren</button>
+        </div>
+        <div class="tool-card">
+            <h4>Lernzieltracker</h4>
+            <button class="btn" onclick="triggerTool('lernzieltracker')">Kann-Liste erstellen</button>
+        </div>
+        <div class="tool-card">
+            <h4>Live-Quiz Schalter</h4>
+            <button class="btn" onclick="triggerTool('livequiz')">Quizfragen aktivieren</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+component: mod_kichatbot
+type: mod
+name: KI-Chatbot
+description: KI-gestützter Chatbot als Moodle-Aktivität.
+
+requires: []
