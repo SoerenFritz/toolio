@@ -1,0 +1,6 @@
+component: mod_abfragetool
+type: mod
+name: Abfragetool
+description: Interaktives Abfragetool für Moodle-Kurse.
+
+requires: []
