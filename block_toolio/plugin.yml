@@ -1,0 +1,7 @@
+component: block_toolio
+type: block
+name: Toolio Block
+description: Seitenleisten-Block für das Toolio-System. Arbeitet zusammen mit mod_toolio.
+
+requires:
+  - mod_toolio
