@@ -1,0 +1,6 @@
+component: format_tiles
+type: format
+name: Tiles (Kachel-Kursformat)
+description: Drittanbieter-Kursformat (David Watson). Zeigt Kursthemen als Kacheln. Branch moodle51, Version 5.1.0.2.
+
+requires: []
