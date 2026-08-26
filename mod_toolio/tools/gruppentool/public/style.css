@@ -1,0 +1,1694 @@
+.path-mod-gruppentool .gruppentool-app {
+  --topbar-height: 62px;
+  --panel-width: min(292px, calc(100vw - 24px));
+  --canvas-left-offset: 0px;
+  --canvas-right-offset: 0px;
+  --bg: #1f2a3a;
+  --surface: #273549;
+  --surface-soft: #2d3c52;
+  --surface-strong: #334560;
+  --line: rgba(207, 223, 246, 0.2);
+  --line-strong: rgba(215, 230, 250, 0.34);
+  --text: #ecf3ff;
+  --text-soft: #bfcee4;
+  --text-inverse: #ffffff;
+  --primary: #6d9ee8;
+  --primary-hover: #7ea9ea;
+  --primary-soft: rgba(109, 158, 232, 0.24);
+  --danger: #f29aa4;
+  --focus-ring: 0 0 0 3px rgba(139, 178, 238, 0.35);
+  --shadow-soft: 0 10px 26px rgba(8, 13, 22, 0.34);
+  --shadow-strong: 0 16px 40px rgba(8, 13, 22, 0.44);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --control-pill-bg: rgba(47, 63, 86, 0.96);
+  --control-pill-bg-hover: rgba(61, 81, 109, 0.98);
+  --control-pill-border: rgba(207, 223, 246, 0.28);
+  --control-pill-text: #ecf3ff;
+  --control-pill-text-soft: #bfd0e6;
+  --transition-fast: 140ms ease;
+  --transition-base: 220ms ease;
+}
+
+.gruppentool-app,
+.gruppentool-app * {
+  box-sizing: border-box;
+}
+
+body.path-mod-gruppentool {
+  min-height: auto;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  line-height: 1.45;
+}
+
+.gruppentool-app h1,
+.gruppentool-app h2,
+.gruppentool-app h3,
+.gruppentool-app p {
+  margin: 0;
+}
+
+.gruppentool-app .container {
+  width: min(580px, calc(100vw - 24px));
+  margin: 8vh auto 0;
+}
+
+.gruppentool-app .card {
+  padding: 24px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-strong);
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.gruppentool-app .stack {
+  display: grid;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.gruppentool-app .student-card-surface .label {
+  font-size: 0.9rem;
+}
+.gruppentool-app .label {
+  display: inline-block;
+  border: 1px solid #d4deea;
+  border-radius: 14px;
+  padding: 0;
+  font-weight: 600;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.gruppentool-app .input {
+  width: 100%;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 0.98rem;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.gruppentool-app .input::placeholder {
+  color: #9fb1ca;
+}
+
+.gruppentool-app .input:focus-visible {
+  border-color: #9ec0f5;
+  box-shadow: var(--focus-ring);
+  background: #33455f;
+}
+
+.gruppentool-app .button {
+  min-height: 36px;
+  border: 1px solid var(--control-pill-border);
+  border-radius: 999px;
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  padding: 0 16px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.gruppentool-app .button:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+  transform: translateY(-1px);
+}
+
+.gruppentool-app .button:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.gruppentool-app .button:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.gruppentool-app .button-secondary {
+  border-color: var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+}
+
+.gruppentool-app .button-secondary:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+}
+
+.gruppentool-app .button-inline {
+  min-height: 36px;
+  white-space: nowrap;
+}
+
+.gruppentool-app .share-row {
+  display: flex;
+  gap: 8px;
+}
+
+.gruppentool-app .share-row .input {
+  flex: 1;
+}
+
+.gruppentool-app .error-text {
+  color: var(--danger);
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.gruppentool-app .helper-text {
+  color: var(--text-soft);
+  font-size: 0.92rem;
+}
+
+.gruppentool-app .session-id {
+  font-family: "Consolas", "Courier New", monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Teacher */
+
+.gruppentool-app .teacher-page {
+  overflow: hidden;
+}
+
+.gruppentool-app .teacher-shell {
+  position: relative;
+  width: 100%;
+  height: min(78vh, 760px);
+  min-height: 560px;
+  margin: 12px 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-strong);
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Trebuchet MS", "Segoe UI", Tahoma, Arial, sans-serif;
+  overflow: hidden;
+  --canvas-left-offset: 0px;
+  --canvas-right-offset: 0px;
+}
+
+.gruppentool-app .topbar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  min-height: var(--topbar-height);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(33, 45, 63, 0.9);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gruppentool-app .topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.gruppentool-app .topbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.gruppentool-app .participants-header-control {
+  gap: 0;
+}
+
+.gruppentool-app .qr-header-control {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.gruppentool-app .participants-header-button {
+  min-width: 36px;
+  min-height: 36px;
+  width: auto;
+  height: 36px;
+  padding: 0 12px 0 10px;
+  min-inline-size: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  gap: 6px;
+  line-height: 1.2;
+  white-space: nowrap;
+  border-color: var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .participants-header-label {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  color: var(--control-pill-text-soft);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.gruppentool-app .participants-header-button .panel-toggle-icon-svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.gruppentool-app .app-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.gruppentool-app .session-pill {
+  border: 1px solid var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text-soft);
+  border-radius: 999px;
+  min-height: 36px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gruppentool-app .mode-switch-button {
+  min-height: 36px;
+  min-width: 142px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 2px 4px;
+  color: var(--control-pill-text-soft);
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border-radius: 999px;
+  touch-action: manipulation;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.gruppentool-app .mode-switch-option {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--control-pill-text-soft);
+  user-select: none;
+}
+
+.gruppentool-app .mode-switch-option.is-active {
+  color: var(--control-pill-text);
+}
+
+.gruppentool-app .mode-switch-track {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--control-pill-border);
+  background: rgba(47, 63, 86, 0.72);
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.gruppentool-app .mode-switch-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: translateX(0);
+  transition: transform var(--transition-base);
+}
+
+.gruppentool-app .mode-switch-button.is-partner .mode-switch-thumb {
+  transform: translateX(0);
+}
+
+.gruppentool-app .mode-switch-button.is-groups .mode-switch-thumb {
+  transform: translateX(14px);
+}
+
+.gruppentool-app .mode-switch-button:focus-visible {
+  outline: 2px solid rgba(198, 225, 255, 0.85);
+  outline-offset: 2px;
+}
+
+.gruppentool-app .topbar-button {
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.gruppentool-app .icon-only {
+  border-radius: 999px;
+}
+
+.gruppentool-app .button-icon-svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.gruppentool-app #errorMessage {
+  position: absolute;
+  top: calc(var(--topbar-height) + 10px);
+  left: 14px;
+  z-index: 40;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(243, 167, 177, 0.56);
+  background: rgba(101, 37, 47, 0.85);
+  color: #ffd5dc;
+  padding: 8px 12px;
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .whiteboard-main {
+  position: absolute;
+  top: var(--topbar-height);
+  left: var(--canvas-left-offset);
+  right: var(--canvas-right-offset);
+  bottom: 0;
+  overflow: hidden;
+  transition: left var(--transition-base), right var(--transition-base);
+}
+
+.gruppentool-app .whiteboard-section,
+.gruppentool-app .whiteboard-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.gruppentool-app .whiteboard-canvas {
+  position: relative;
+  overflow: hidden;
+  background: #243245;
+}
+
+.gruppentool-app .whiteboard-canvas.is-drop-active {
+  box-shadow: inset 0 0 0 2px rgba(143, 182, 240, 0.36);
+}
+
+.gruppentool-app .whiteboard-group-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.gruppentool-app .prototype-dashed-circle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px dashed rgba(189, 208, 233, 0.58);
+  background: radial-gradient(circle at 50% 50%, rgba(132, 165, 206, 0.08), rgba(132, 165, 206, 0.02) 62%, transparent 74%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.gruppentool-app .whiteboard-connector-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.gruppentool-app .proto-lines-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gruppentool-app .proto-group-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+  min-width: 84px;
+  max-width: 220px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(190, 208, 228, 0.55);
+  background: rgba(28, 42, 59, 0.66);
+  color: #e7f0fb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  cursor: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: text;
+}
+
+.gruppentool-app .proto-group-label.is-drag-zone {
+  cursor: grab;
+  user-select: none;
+}
+
+.gruppentool-app .proto-group-label.is-editing {
+  background: rgba(23, 35, 50, 0.9);
+  border-color: rgba(199, 225, 255, 0.9);
+  box-shadow: 0 0 0 2px rgba(119, 173, 237, 0.32);
+  outline: none;
+  cursor: text;
+  user-select: text;
+}
+
+.gruppentool-app .proto-group-label.is-editing:focus,
+.gruppentool-app .proto-group-label.is-editing:focus-visible {
+  outline: none;
+  border-color: rgba(199, 225, 255, 0.95);
+  box-shadow: 0 0 0 2px rgba(119, 173, 237, 0.34);
+}
+
+.gruppentool-app .proto-group-label.is-dragging {
+  cursor: grabbing;
+}
+
+.gruppentool-app .whiteboard-loose-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.gruppentool-app .prototype-participant-circle,
+.gruppentool-app .proto-circle {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.32);
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  z-index: 20;
+}
+
+.gruppentool-app .prototype-participant-circle.is-dragging,
+.gruppentool-app .proto-circle.is-dragging {
+  cursor: grabbing;
+}
+
+.gruppentool-app .prototype-participant-circle:hover,
+.gruppentool-app .proto-circle:hover {
+  box-shadow: 0 0 0 3px rgba(119, 173, 237, 0.28), 0 2px 9px rgba(0, 0, 0, 0.32);
+}
+
+.gruppentool-app .prototype-participant-circle.is-preview-highlight,
+.gruppentool-app .proto-circle.is-preview-highlight {
+  box-shadow: 0 0 0 3px rgba(119, 173, 237, 0.34), 0 2px 9px rgba(0, 0, 0, 0.32);
+}
+
+.gruppentool-app .proto-circle.is-swap-candidate {
+  box-shadow: 0 0 0 4px rgba(237, 76, 92, 0.78), 0 2px 9px rgba(0, 0, 0, 0.34);
+  border-color: rgba(255, 168, 176, 0.98);
+}
+
+.gruppentool-app .canvas-participant {
+  --flip-x: 0px;
+  --flip-y: 0px;
+  --participant-scale: 1;
+  --participant-color: #64c3ff;
+  position: absolute;
+  transform: translate(-50%, -50%) translate(var(--flip-x), var(--flip-y)) scale(var(--participant-scale));
+  width: 74px;
+  min-height: 74px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  box-shadow: none;
+  cursor: grab;
+  pointer-events: auto;
+  user-select: none;
+  transition: left 260ms ease, top 260ms ease, transform 260ms ease, color 180ms ease;
+}
+
+.gruppentool-app .canvas-participant.is-dragging {
+  opacity: 0;
+}
+
+.gruppentool-app .canvas-participant.is-connection-target {
+  --participant-scale: 1.08;
+}
+
+.gruppentool-app .canvas-participant.is-flip-prep {
+  transition: none !important;
+}
+
+.gruppentool-app .canvas-participant-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--participant-color);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.38);
+  transition: transform 140ms ease, box-shadow 160ms ease;
+}
+
+.gruppentool-app .canvas-participant.is-connection-target .canvas-participant-dot {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px rgba(119, 173, 237, 0.32), 0 3px 10px rgba(0, 0, 0, 0.38);
+}
+
+.gruppentool-app .canvas-participant-label {
+  width: 100%;
+  text-align: center;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.22;
+  color: #d9e7f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gruppentool-app .group-connector-line {
+  position: absolute;
+  height: 0;
+  border-top: 2px dashed rgba(206, 224, 246, 0.62);
+  transform-origin: 0 50%;
+}
+
+.gruppentool-app .group-connector-line.is-active {
+  border-top-color: #c6e1ff;
+  border-top-style: solid;
+}
+
+.gruppentool-app .group-connector-line.is-docked {
+  border-top-style: solid;
+  border-top-color: rgba(177, 203, 232, 0.42);
+}
+
+.gruppentool-app .group-connector-line.is-temporarily-hidden {
+  display: none;
+}
+
+.gruppentool-app .group-connector-square {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  border: 2px dashed rgba(206, 224, 246, 0.72);
+  border-radius: 8px;
+  background: rgba(61, 86, 119, 0.24);
+}
+
+.gruppentool-app .group-connector-square.is-active {
+  border-style: solid;
+  border-color: #c6e1ff;
+  background: rgba(111, 162, 222, 0.26);
+}
+
+.gruppentool-app .group-drop-ghost {
+  --preview-strength: 0;
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+  border-radius: 50%;
+  border: 2px solid rgba(198, 225, 255, 0.92);
+  background: rgba(116, 166, 227, 0.22);
+  box-shadow: 0 0 0 10px rgba(116, 166, 227, 0.08);
+  transform: scale(calc(0.9 + (var(--preview-strength) * 0.22)));
+  opacity: calc(0.72 + (var(--preview-strength) * 0.28));
+  transition: transform 120ms ease, opacity 120ms ease;
+  animation: groupDropGhostPulse 680ms ease-in-out infinite alternate;
+}
+
+@keyframes groupDropGhostPulse {
+  from {
+    transform: scale(0.92);
+    opacity: 0.78;
+  }
+
+  to {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+.gruppentool-app .whiteboard-empty-state {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+  text-align: center;
+  max-width: 360px;
+  pointer-events: none;
+}
+
+.gruppentool-app .participants-dock {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--panel-width);
+  z-index: 22;
+  pointer-events: none;
+}
+
+.gruppentool-app .panel-toggle-icon-svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.gruppentool-app .side-panel {
+  position: absolute;
+  top: var(--topbar-height);
+  bottom: 0;
+  width: var(--panel-width);
+  z-index: 23;
+  background: #f4f7fb;
+  color: #1f3248;
+  border: 0;
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  transition: transform var(--transition-base);
+}
+
+.gruppentool-app .participants-panel {
+  left: 0;
+  transform: translateX(-102%);
+  pointer-events: auto;
+  padding: 14px 12px 12px;
+  border-right: 1px solid #d4deea;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-content: start;
+}
+
+.gruppentool-app .participants-panel.is-open {
+  transform: translateX(0);
+}
+
+.gruppentool-app .qr-panel {
+  left: var(--canvas-left-offset);
+  right: auto;
+  width: calc(100% - var(--canvas-left-offset));
+  max-width: none;
+  min-width: 0;
+  transform: translateX(102%);
+  pointer-events: auto;
+  padding: 28px 24px 30px;
+  background: rgba(31, 42, 58, 0.96);
+  color: var(--control-pill-text);
+  border-left: 1px solid var(--control-pill-border);
+  box-shadow: -18px 0 34px rgba(6, 11, 18, 0.42);
+  backdrop-filter: blur(10px);
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+}
+
+.gruppentool-app .qr-panel.is-open {
+  transform: translateX(0);
+}
+
+.gruppentool-app .qr-panel .side-panel-header {
+  width: 100%;
+  justify-content: center;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.gruppentool-app .qr-panel .side-panel-title {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--control-pill-text);
+}
+
+.gruppentool-app .qr-panel .helper-text {
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  color: var(--control-pill-text-soft);
+}
+
+.gruppentool-app .qr-panel .share-row {
+  width: 100%;
+  max-width: 360px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.gruppentool-app .qr-panel .share-row .input {
+  min-height: 46px;
+  border-color: var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .qr-panel .share-row .input::placeholder {
+  color: var(--control-pill-text-soft);
+}
+
+.gruppentool-app .qr-panel .button {
+  min-height: 38px;
+  border-color: var(--control-pill-border);
+  border-radius: 999px;
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  font-weight: 800;
+  padding: 0 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .qr-panel .button:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+}
+
+.gruppentool-app .qr-panel .button-inline {
+  width: 100%;
+}
+
+.gruppentool-app .side-panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d4deea;
+}
+
+.gruppentool-app .side-panel-title {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.gruppentool-app .side-panel-subtitle {
+  color: #5a7089;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.gruppentool-app .side-panel .helper-text {
+  color: #5a7089;
+}
+
+.gruppentool-app .side-panel .input {
+  border-color: #b9c8d8;
+  background: #ffffff;
+  color: #1f3248;
+}
+
+.gruppentool-app .side-panel .input::placeholder {
+  color: #7b90a8;
+}
+
+.gruppentool-app .side-panel .button-secondary {
+  border-color: var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+}
+
+.gruppentool-app .side-panel .button-secondary:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+}
+
+.gruppentool-app .participants-list-wrap {
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  padding: 2px 0;
+  background: transparent;
+}
+
+.gruppentool-app .participants-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.gruppentool-app .participants-panel.is-drop-active {
+  background: #f4f7fb;
+  outline: 2px dashed rgba(79, 110, 145, 0.6);
+  outline-offset: -2px;
+}
+
+.gruppentool-app .participants-item {
+  border: 0;
+  border-bottom: 1px solid #dbe4ef;
+  border-radius: 0;
+  background: transparent;
+  color: #1f3248;
+  padding: 10px 6px 10px 4px;
+  font-size: 0.88rem;
+  line-height: 1.25;
+  word-break: break-word;
+  transition: background-color var(--transition-fast);
+}
+
+.gruppentool-app .participants-item:last-child {
+  border-bottom: 0;
+}
+
+.gruppentool-app .participants-item-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 24px;
+}
+
+.gruppentool-app .participant-avatar-icon {
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+  border-radius: 50%;
+  background: #e8eef5;
+  border: 1px solid #d2dce8;
+  color: #3f5874;
+  flex-shrink: 0;
+}
+
+.gruppentool-app .participant-name {
+  color: #1f3248;
+  font-weight: 600;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gruppentool-app .participant-remove-button {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #7a8ea2;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.gruppentool-app .participant-remove-button:hover {
+  background: rgba(79, 110, 145, 0.12);
+  color: #2c4b70;
+}
+
+.gruppentool-app .participant-remove-button:focus-visible {
+  outline: 2px solid rgba(59, 90, 126, 0.42);
+  outline-offset: 1px;
+}
+
+.gruppentool-app .participant-remove-button svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.gruppentool-app .participants-item-draggable {
+  cursor: grab;
+}
+
+.gruppentool-app .participants-item-draggable:hover {
+  background: rgba(79, 110, 145, 0.08);
+}
+
+.gruppentool-app .participants-item-inactive {
+  opacity: 0.72;
+  background: rgba(90, 112, 137, 0.06);
+}
+
+.gruppentool-app .participants-item-inactive .participant-name {
+  text-decoration: line-through;
+}
+
+.gruppentool-app .participants-item-empty {
+  color: #5a7089;
+  border-bottom: 0;
+  background: transparent;
+  padding: 12px 6px;
+}
+
+.gruppentool-app .participants-panel-footer {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  padding-top: 10px;
+  border-top: 0;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.gruppentool-app .mode-switch-button-inline {
+  min-height: 38px;
+  min-width: 148px;
+  padding: 2px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  flex: 0 0 auto;
+  max-width: none;
+  justify-self: auto;
+}
+
+.gruppentool-app .mode-switch-button-inline .mode-switch-option {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #4a627a;
+}
+
+.gruppentool-app .mode-switch-button-inline .mode-switch-option.is-active {
+  color: #0f2a43;
+}
+
+.gruppentool-app .mode-switch-button-inline .mode-switch-track {
+  border-color: #9cb1c6;
+  background: #e8eef5;
+}
+
+.gruppentool-app .mode-switch-button-inline .mode-switch-thumb {
+  background: #1d3954;
+}
+
+.gruppentool-app .mode-switch-button-inline:focus-visible {
+  outline: 2px solid rgba(29, 57, 84, 0.5);
+  outline-offset: 3px;
+}
+
+.gruppentool-app #autoAssignButton {
+  min-height: 40px;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--control-pill-border);
+  border-radius: 50%;
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  font-weight: 800;
+  padding: 0;
+  justify-self: center;
+  align-self: center;
+  box-shadow: var(--shadow-soft);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 40px;
+}
+
+.gruppentool-app #autoAssignButton .button-icon-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gruppentool-app #autoAssignButton:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+}
+
+.gruppentool-app #autoAssignButton:disabled {
+  opacity: 0.5;
+}
+
+.gruppentool-app .qr-code {
+  width: 100%;
+  max-width: min(360px, calc(100vw - var(--canvas-left-offset) - 56px));
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .qr-code img,
+.gruppentool-app .qr-code canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.gruppentool-app .qr-code a {
+  color: var(--control-pill-text-soft);
+}
+
+.gruppentool-app .group-flower {
+  position: absolute;
+  --flip-x: 0px;
+  --flip-y: 0px;
+  --group-radius: 56px;
+  --preview-angle: 0rad;
+  transform: translate(-50%, -50%) translate(var(--flip-x), var(--flip-y)) scale(var(--group-scale, 1));
+  transform-origin: center;
+  transition: left 280ms ease, top 280ms ease, transform 280ms ease;
+}
+
+.gruppentool-app .group-flower.is-opening {
+  --group-scale: calc(var(--group-scale, 1) * (1 + (var(--preview-strength, 0) * 0.18)));
+}
+
+.gruppentool-app .group-frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--group-radius) * 2);
+  height: calc(var(--group-radius) * 2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px dashed rgba(172, 201, 233, 0.34);
+  box-shadow: inset 0 0 0 1px rgba(116, 152, 192, 0.12);
+  pointer-events: none;
+}
+
+.gruppentool-app .group-frame::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  margin-top: -9px;
+  border-radius: 50%;
+  background: rgba(197, 226, 255, 0.88);
+  transform:
+    rotate(var(--preview-angle))
+    translateX(calc(var(--group-radius) + 2px))
+    scale(calc(0.6 + (var(--preview-strength, 0) * 0.6)));
+  opacity: calc(var(--preview-strength, 0) * 0.95);
+  transition: transform 130ms ease, opacity 130ms ease;
+}
+
+.gruppentool-app .group-connector-line.is-preview {
+  background: linear-gradient(
+    90deg,
+    rgba(150, 198, 248, 0.42) 0%,
+    rgba(178, 217, 255, 0.9) 100%
+  );
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.gruppentool-app .group-flower.is-flip-prep {
+  transition: none !important;
+}
+
+.gruppentool-app .group-label {
+  position: static;
+  transform: none;
+  margin: 0;
+  width: auto;
+  height: auto;
+  padding: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #dbe8f8;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1.2;
+  max-width: 230px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+  hyphens: none;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  cursor: pointer;
+}
+
+.gruppentool-app .group-label.is-editing {
+  cursor: text;
+  min-width: 90px;
+}
+
+.gruppentool-app .group-label-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  z-index: 2;
+}
+.gruppentool-app .group-label:hover {
+  color: #ffffff;
+}
+
+.gruppentool-app .group-label:focus-visible {
+  outline: 2px solid rgba(198, 225, 255, 0.85);
+  outline-offset: 2px;
+}
+
+.gruppentool-app .group-connector-line.is-pair {
+  border-top-color: rgba(177, 203, 232, 0.78);
+}
+
+.gruppentool-app .group-control-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 24;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--control-pill-border);
+  border-radius: 999px;
+  background: var(--control-pill-bg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.gruppentool-app .group-control-btn,
+.gruppentool-app .group-count-btn {
+  min-height: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--control-pill-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0 14px;
+}
+
+.gruppentool-app .group-control-btn {
+  cursor: pointer;
+  min-width: 44px;
+}
+
+.gruppentool-app .group-count-btn {
+  min-width: 120px;
+  cursor: default;
+  color: var(--control-pill-text-soft);
+  border-left: 1px solid var(--control-pill-border);
+  border-right: 1px solid var(--control-pill-border);
+}
+
+.gruppentool-app .group-control-btn:hover:not(:disabled) {
+  background: rgba(126, 169, 234, 0.18);
+}
+
+.gruppentool-app .group-count-btn:hover:not(:disabled) {
+  background: rgba(126, 169, 234, 0.08);
+}
+
+.gruppentool-app .group-count-btn:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.gruppentool-app .group-control-btn:focus-visible,
+.gruppentool-app .group-count-btn:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.gruppentool-app .modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 80;
+}
+
+.gruppentool-app .modal.is-open {
+  display: block;
+}
+
+.gruppentool-app .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 17, 28, 0.56);
+}
+
+.gruppentool-app .modal-content {
+  position: relative;
+  z-index: 1;
+  width: min(440px, calc(100vw - 24px));
+  margin: 8vh auto 0;
+  background: #2a3a51;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-strong);
+  padding: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.gruppentool-app .modal-content h2 {
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.gruppentool-app .settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+/* Student */
+
+.gruppentool-app .student-page {
+  overflow: auto;
+  background: #243245;
+}
+
+.gruppentool-app .student-shell {
+  position: relative;
+  min-height: 420px;
+  max-width: 980px;
+  margin: 12px auto;
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-strong);
+}
+
+.gruppentool-app .student-topbar {
+  justify-content: flex-start;
+  position: sticky;
+  top: 0;
+}
+
+.gruppentool-app .student-topbar-title {
+  border: 1px solid var(--control-pill-border);
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text-soft);
+  border-radius: 999px;
+  min-height: 36px;
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.gruppentool-app .student-main {
+  position: relative;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #243245;
+}
+
+.gruppentool-app .student-card {
+  width: min(680px, 100%);
+}
+
+.gruppentool-app .student-card-surface {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 10px 0;
+}
+
+.gruppentool-app .student-card-surface.is-waiting {
+  min-height: calc(100dvh - var(--topbar-height) - 64px);
+  align-content: center;
+}
+
+.gruppentool-app .student-card-surface h1 {
+  font-size: 1.28rem;
+  letter-spacing: 0.01em;
+}
+
+.gruppentool-app .student-card-surface .helper-text {
+  color: var(--text-soft);
+}
+
+.gruppentool-app .student-card-surface .label {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.gruppentool-app .student-join-block {
+  display: grid;
+  gap: 0;
+  justify-items: center;
+}
+
+.gruppentool-app .student-join-row {
+  position: relative;
+  display: block;
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+.gruppentool-app .student-group-box {
+  width: min(560px, 100%);
+  margin: 16px auto 0;
+  border: 1px solid #d4deea;
+  border-radius: 24px;
+  padding: 0;
+  background: #f4f7fb;
+  overflow: hidden;
+}
+
+.gruppentool-app .student-group-box[hidden] {
+  display: none !important;
+}
+
+.gruppentool-app .student-group-label {
+  font-size: 0.82rem;
+  color: #5a7089;
+  margin: 0;
+  padding: 10px 12px 4px;
+  font-weight: 700;
+}
+
+.gruppentool-app .student-group-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1f3248;
+  margin: 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid #dbe4ef;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gruppentool-app .student-group-members-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+.gruppentool-app .student-group-member-row {
+  padding: 11px 14px;
+  border: 0;
+  border-bottom: 1px solid #dbe4ef;
+  border-radius: 0;
+  background: #ffffff;
+  color: #1f3248;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.gruppentool-app .student-group-member-row:last-child {
+  border-bottom: 0;
+}
+
+.gruppentool-app #joinButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border: 1px solid var(--control-pill-border);
+  border-radius: 50%;
+  background: var(--control-pill-bg);
+  color: var(--control-pill-text);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  box-shadow: var(--shadow-soft);
+  justify-self: auto;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.gruppentool-app #joinButton:hover:not(:disabled) {
+  background: var(--control-pill-bg-hover);
+}
+
+.gruppentool-app .student-card-surface .input {
+  border-radius: 999px;
+  border-color: #d4deea;
+  background: #ffffff;
+  color: #1f3248;
+  min-height: 48px;
+  padding: 10px 60px;
+  font-size: 1.24rem;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+}
+
+.gruppentool-app .student-card-surface .input::placeholder {
+  color: #6f859f;
+  font-weight: 600;
+}
+
+/* Utility */
+
+.gruppentool-app .hidden {
+  display: none !important;
+}
+
+@media (max-width: 920px) {
+  :root {
+    --topbar-height: 64px;
+    --panel-width: min(300px, calc(100vw - 16px));
+  }
+
+  .gruppentool-app .topbar {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --topbar-height: 72px;
+  }
+
+  .gruppentool-app .topbar {
+    align-items: center;
+    min-height: var(--topbar-height);
+    padding: 8px 10px;
+  }
+
+  .gruppentool-app .student-main {
+    padding: 14px 10px;
+  }
+
+  .gruppentool-app .student-card-surface.is-waiting {
+    min-height: calc(100dvh - var(--topbar-height) - 40px);
+  }
+
+  .gruppentool-app .student-card {
+    width: 100%;
+  }
+
+  .gruppentool-app #joinButton {
+    right: 6px;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    font-size: 1.05rem;
+  }
+
+  .gruppentool-app .student-group-box {
+    margin-top: 14px;
+    border-radius: 12px;
+  }
+
+  .gruppentool-app .student-group-value {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .gruppentool-app .student-group-members-list {
+    padding: 0;
+  }
+
+  .gruppentool-app .student-group-member-row {
+    font-size: 0.96rem;
+    padding: 9px 12px;
+  }
+
+  .gruppentool-app .topbar-left {
+    align-self: flex-start;
+  }
+
+  .gruppentool-app .topbar-actions {
+    align-self: flex-end;
+  }
+
+  .gruppentool-app .topbar-center {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .gruppentool-app .participants-header-label {
+    font-size: 0.78rem;
+  }
+
+  .gruppentool-app .group-label {
+    width: 72px;
+    height: 72px;
+    font-size: 0.68rem;
+  }
+
+  .gruppentool-app .group-control-bar {
+    bottom: 8px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --topbar-height: 76px;
+    --panel-width: calc(100vw - 12px);
+  }
+
+  .gruppentool-app .container,
+  .gruppentool-app .student-card {
+    width: calc(100vw - 14px);
+  }
+
+  .gruppentool-app .student-main {
+    padding: 10px 7px;
+  }
+
+  .gruppentool-app .student-card-surface.is-waiting {
+    min-height: calc(100dvh - var(--topbar-height) - 24px);
+  }
+
+  .gruppentool-app .card {
+    padding: 14px;
+  }
+
+  .gruppentool-app .participants-header-label {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .gruppentool-app .group-control-btn,
+  .gruppentool-app .group-count-btn {
+    min-height: 36px;
+    padding: 0 11px;
+   }
+
+   .gruppentool-app .participants-panel-footer {
+     gap: 0;
+     justify-content: space-evenly;
+   }
+
+   .gruppentool-app .mode-switch-button-inline {
+     min-width: 136px;
+     max-width: none;
+   }
+
+   .gruppentool-app .mode-switch-button-inline .mode-switch-option {
+     font-size: 0.8rem;
+   }
+ 
+   .gruppentool-app .modal-content {
+     margin-top: 5vh;
+     padding: 14px;
+   }
+ 
+   .gruppentool-app .share-row {
+     flex-direction: column;
+   }
+ }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

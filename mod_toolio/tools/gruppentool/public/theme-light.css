@@ -1,0 +1,243 @@
+/**
+ * Toolio Light-Reskin fuer die Gruppentool-Engine.
+ *
+ * Wird NACH public/style.css geladen und ueberschreibt nur Aussehen (Farben/Flaechen),
+ * niemals Verhalten/Layout. Zwei Aufgaben:
+ *  1. Die CSS-Variablen des Originals sind auf `.path-mod-gruppentool .gruppentool-app`
+ *     gescoped und greifen auf mod_toolio-Seiten (body.path-mod-toolio) NICHT. Wir
+ *     definieren sie hier auf `.gruppentool-app` neu — in hellen Toolio-Farben.
+ *  2. Wenige hartkodierte Dunkelflaechen (Buehne, Topbar, Gruppen-Labels) hell setzen.
+ */
+
+.gruppentool-app {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-soft: #f1f5f9;
+  --surface-strong: #e2e8f0;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-soft: #475569;
+  --text-inverse: #ffffff;
+  --primary: #059669;
+  --primary-hover: #10b981;
+  --primary-soft: rgba(5, 150, 105, 0.16);
+  --danger: #dc2626;
+  --focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.30);
+  --shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.08);
+  --shadow-strong: 0 14px 36px rgba(15, 23, 42, 0.12);
+  --control-pill-bg: #ffffff;
+  --control-pill-bg-hover: #f1f5f9;
+  --control-pill-border: #cbd5e1;
+  --control-pill-text: #0f172a;
+  --control-pill-text-soft: #475569;
+  height: 100%;
+}
+
+/* Buehne (Whiteboard) hell statt #1f2a3a / #243245 */
+.gruppentool-app .teacher-shell,
+.gruppentool-app .whiteboard-canvas,
+.gruppentool-app .student-shell,
+.gruppentool-app .student-main {
+  background: var(--bg);
+}
+
+/* Topbar: helle, leicht durchscheinende Leiste */
+.gruppentool-app .topbar {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom-color: var(--line);
+}
+
+/* Gruppen-Label-Pille auf der Buehne */
+.gruppentool-app .proto-group-label {
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+.gruppentool-app .proto-group-label.is-editing,
+.gruppentool-app .proto-group-label.is-editing:focus,
+.gruppentool-app .proto-group-label.is-editing:focus-visible {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+/* Gestrichelter Gruppen-Ring dezent-dunkel statt hellblau-auf-dunkel */
+.gruppentool-app .prototype-dashed-circle {
+  border-color: rgba(100, 116, 139, 0.42);
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.06), transparent 72%);
+  box-shadow: none;
+}
+
+/* Teilnehmer-Kreise: weicher Schatten fuer hellen Hintergrund */
+.gruppentool-app .proto-circle,
+.gruppentool-app .prototype-participant-circle {
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+  border-color: #ffffff;
+}
+
+/* Drop-/Hover-Feedback in Toolio-Gruen */
+.gruppentool-app .whiteboard-canvas.is-drop-active {
+  box-shadow: inset 0 0 0 2px var(--primary-soft);
+}
+.gruppentool-app .group-control-btn:hover:not(:disabled) {
+  background: var(--primary-soft);
+}
+.gruppentool-app .group-count-btn:hover:not(:disabled) {
+  background: rgba(5, 150, 105, 0.06);
+}
+
+/* Engine-Buehne fuegt sich in die Toolio-Karte ein (kein doppelter Rahmen/Abstand) */
+.gruppentool-app .teacher-shell {
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  height: 100%;
+  min-height: 0;
+  --topbar-height: 0px;
+  --canvas-left-offset: 0px;
+  --canvas-right-offset: 0px;
+  /* Board oben (flexibel) + Steuerleiste unten (fester Streifen). */
+  display: flex;
+  flex-direction: column;
+}
+.gruppentool-app .student-shell {
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ *
+ * Umbau (Korrektur #2): Kopfzeile und Seitenleiste ausblenden.
+ * Alle Teilnehmenden liegen direkt auf dem Board; die Steuerung
+ * (Partner/Gruppen, Wuerfel, Gruppenanzahl) sitzt in einer sichtbaren
+ * Leiste unten. Die DOM-Knoten bleiben erhalten, damit teacher.js
+ * (getElementById) nicht abstuerzt — sie werden nur versteckt.
+ * ------------------------------------------------------------------ */
+
+/* Kopfzeile weg */
+.gruppentool-app .topbar {
+  display: none !important;
+}
+
+/* Seitenleiste (Teilnehmenden-Dock) weg + Canvas nutzt volle Breite */
+.gruppentool-app .participants-dock {
+  display: none !important;
+}
+.gruppentool-app .whiteboard-canvas {
+  --canvas-left-offset: 0px !important;
+}
+
+/* Board fuellt den oberen Bereich als flexibler Streifen (nicht mehr absolut). */
+.gruppentool-app .whiteboard-main {
+  position: relative;
+  inset: auto;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-top: 0;
+}
+
+/* Steuerung als Overlay direkt auf dem Canvas (keine eigene Leiste). */
+.gruppentool-app .gt-canvas-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  pointer-events: none;
+}
+.gruppentool-app .gt-canvas-controls > *,
+.gruppentool-app .gt-controls-left > * {
+  pointer-events: auto;
+}
+.gruppentool-app .gt-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Switch OHNE Pille: sitzt direkt auf dem Canvas (kein weisser Hintergrund). */
+.gruppentool-app .gt-canvas-controls .mode-switch-button-inline {
+  margin: 0;
+  padding: 0;
+  min-height: 40px;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* - Anzahl + in EINER Pille, mittig ueber dem Canvas. */
+.gruppentool-app .group-count-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+}
+.gruppentool-app .group-count-pill .group-control-btn,
+.gruppentool-app .group-count-pill .group-count-btn {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  height: 100%;
+}
+.gruppentool-app .group-count-pill .group-control-btn {
+  width: 40px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #1d3954;
+}
+.gruppentool-app .group-count-pill .group-count-btn {
+  padding: 0 12px;
+  min-width: 92px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f2a43;
+}
+.gruppentool-app .group-count-pill .group-control-btn + .group-count-btn,
+.gruppentool-app .group-count-pill .group-count-btn + .group-control-btn {
+  border-left: 1px solid var(--line);
+}
+
+/* Wuerfel als runder FAB unten rechts. */
+.gruppentool-app .gt-dice-fab {
+  margin: 0;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.98);
+  color: #1d3954;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.22);
+  cursor: pointer;
+}
+.gruppentool-app .gt-dice-fab:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.28);
+}
+.gruppentool-app .gt-dice-fab .button-icon-svg {
+  width: 26px;
+  height: 26px;
+}
+

@@ -1,0 +1,6 @@
+component: mod_toolio
+type: mod
+name: Toolio Aktivität
+description: Haupt-Aktivitätsplugin des Toolio-Systems. Arbeitet zusammen mit block_toolio.
+
+requires: []

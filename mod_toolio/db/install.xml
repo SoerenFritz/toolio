@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/toolio/db" VERSION="20260823" COMMENT="Toolio experiment plugin">
+  <TABLES>
+    <TABLE NAME="toolio" COMMENT="Toolio instances (Anker einer Zyklus-Kette)">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course"       TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name"         TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="method"       TYPE="char" LENGTH="50"  NOTNULL="false"/>
+        <FIELD NAME="islive"       TYPE="int"  LENGTH="1"   NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_cycle" COMMENT="Ein Arbeitszyklus (Drei-Takt) in der Kette einer Toolio-Aktivitaet">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="toolioid"     TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="ordinal"      TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="method"       TYPE="char" LENGTH="50"  NOTNULL="false"/>
+        <FIELD NAME="sozialform"   TYPE="char" LENGTH="20"  NOTNULL="false"/>
+        <FIELD NAME="status"       TYPE="char" LENGTH="20"  NOTNULL="true" DEFAULT="draft"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="usermodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary"  TYPE="primary" FIELDS="id"/>
+        <KEY NAME="toolioid" TYPE="foreign" FIELDS="toolioid" REFTABLE="toolio" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="toolioid-ordinal" UNIQUE="false" FIELDS="toolioid, ordinal"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_cycle_tool" COMMENT="Werkzeuge eines Zyklus (0..n; 0 = reine Sozialform)">
+      <FIELDS>
+        <FIELD NAME="id"      TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cycleid" TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="tool"    TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="ordinal" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cycleid" TYPE="foreign" FIELDS="cycleid" REFTABLE="toolio_cycle" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cycleid-ordinal" UNIQUE="false" FIELDS="cycleid, ordinal"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_snapshot" COMMENT="Gesicherter Zwischenstand (Meilenstein); ein gemeinsames JSON-Format">
+      <FIELDS>
+        <FIELD NAME="id"          TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cycleid"     TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="tool"        TYPE="char" LENGTH="32" NOTNULL="true"/>
+        <FIELD NAME="ownertype"   TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="group"/>
+        <FIELD NAME="userid"      TYPE="int"  LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="groupno"     TYPE="int"  LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="payload"     TYPE="text"             NOTNULL="true"/>
+        <FIELD NAME="format"      TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="toolio.v1"/>
+        <FIELD NAME="timecreated" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="usercreated" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cycleid" TYPE="foreign" FIELDS="cycleid" REFTABLE="toolio_cycle" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cycleid-tool" UNIQUE="false" FIELDS="cycleid, tool"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_cycle_input" COMMENT="Verkettung: ein Zyklus startet aus Snapshot(s), auch Toolio-uebergreifend">
+      <FIELDS>
+        <FIELD NAME="id"         TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cycleid"    TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="snapshotid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="ordinal"    TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary"    TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cycleid"    TYPE="foreign" FIELDS="cycleid"    REFTABLE="toolio_cycle"    REFFIELDS="id"/>
+        <KEY NAME="snapshotid" TYPE="foreign" FIELDS="snapshotid" REFTABLE="toolio_snapshot" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cycleid-ordinal" UNIQUE="false" FIELDS="cycleid, ordinal"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_gruppentool_state" COMMENT="Live-Arbeitszustand des Gruppentools je Zyklus (versionierter JSON-Blob)">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cycleid"      TYPE="int"  LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="version"      TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="payload"      TYPE="text"             NOTNULL="true"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="cycleid" TYPE="foreign-unique" FIELDS="cycleid" REFTABLE="toolio_cycle" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="toolio_gt_member" COMMENT="Gruppentool-Engine: Teilnehmerzustand und Zuordnung je Kursmodul">
+      <FIELDS>
+        <FIELD NAME="id"             TYPE="int"    LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="coursemoduleid" TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid"         TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="active"         TYPE="int"    LENGTH="1"  NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="groupid"        TYPE="char"   LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="groupstableid"  TYPE="char"   LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="grouporder"     TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="groupmode"      TYPE="char"   LENGTH="20" NOTNULL="false"/>
+        <FIELD NAME="canvasx"        TYPE="number" LENGTH="10" DECIMALS="6" NOTNULL="false"/>
+        <FIELD NAME="canvasy"        TYPE="number" LENGTH="10" DECIMALS="6" NOTNULL="false"/>
+        <FIELD NAME="timemodified"   TYPE="int"    LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cm_user_uix"  UNIQUE="true"  FIELDS="coursemoduleid, userid"/>
+        <INDEX NAME="cm_group_idx" UNIQUE="false" FIELDS="coursemoduleid, groupid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_gt_state" COMMENT="Gruppentool-Engine: Zustand je Kursmodul (versioniert fuer SSE)">
+      <FIELDS>
+        <FIELD NAME="id"                 TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="coursemoduleid"     TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="groupcount"         TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="groupmode"          TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="groups"/>
+        <FIELD NAME="groupstableidsjson" TYPE="text"             NOTNULL="false"/>
+        <FIELD NAME="grouplabelsjson"    TYPE="text"             NOTNULL="false"/>
+        <FIELD NAME="boardstatejson"     TYPE="text"             NOTNULL="false"/>
+        <FIELD NAME="stateversion"       TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified"       TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cm_uix" UNIQUE="true" FIELDS="coursemoduleid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_board" COMMENT="Eingebettetes Board: persistierte Excalidraw-Szene je Gruppen-Raum (E2E-verschluesselter Blob)">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="roomid"       TYPE="char" LENGTH="64" NOTNULL="true" COMMENT="Unerratbare Raum-ID (HMAC-abgeleitet)"/>
+        <FIELD NAME="cmid"         TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Course-Module-ID der Toolio-Aktivitaet"/>
+        <FIELD NAME="groupid"      TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Gruppen-Nummer im Zyklus"/>
+        <FIELD NAME="sceneversion" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Excalidraw scene version"/>
+        <FIELD NAME="sceneblob"    TYPE="text"             NOTNULL="false" COMMENT="Base64 des verschluesselten Szene-Blobs"/>
+        <FIELD NAME="savedby"      TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="User-ID des letzten Speicherns (0 = unbekannt)"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="roomid" UNIQUE="true" FIELDS="roomid"/>
+        <INDEX NAME="cmid" UNIQUE="false" FIELDS="cmid"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="toolio_board_file" COMMENT="Eingebettetes Board: persistierte Excalidraw-Bilddateien je Raum (verschluesselter Blob)">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="roomid"       TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="fileid"       TYPE="char" LENGTH="128" NOTNULL="true"/>
+        <FIELD NAME="filedata"     TYPE="text"             NOTNULL="false" COMMENT="Base64 des verschluesselten Datei-Blobs"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="roomfile" UNIQUE="true" FIELDS="roomid, fileid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
