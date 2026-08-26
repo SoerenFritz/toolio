@@ -1,0 +1,6 @@
+component: mod_bewertung
+type: mod
+name: Bewertungstool
+description: Bewertungs- und Reflexionswerkzeug (Reserve). Platzhalter-Prototyp, wird später in mod_toolio portiert.
+
+requires: []
